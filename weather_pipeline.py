@@ -191,9 +191,10 @@ def get_mongo_client() -> MongoClient:
         MONGO_URI,
         tls=True,  # <- importante
         tlsCAFile=certifi.where(),
-        serverSelectionTimeoutMS=8000,
-        connectTimeoutMS=8000,
-        socketTimeoutMS=8000,
+        serverSelectionTimeoutMS=30000,  # Aumentado de 8s a 30s
+        connectTimeoutMS=30000,  # Aumentado de 8s a 30s
+        socketTimeoutMS=30000,  # Aumentado de 8s a 30s
+        retryWrites=True,
     )
 
 
