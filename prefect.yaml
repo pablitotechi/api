@@ -1,0 +1,18 @@
+# Prefect Deployment Configuration
+# Deploy the weather ETL pipeline from GitHub
+
+prefect-version: 3.0
+name: weather-pipeline
+deployments:
+  - name: weather-daily-github
+    description: Weather ETL scheduled daily from GitHub
+    entrypoint: weather_pipeline_prefect.py:weather_etl_scheduled
+    work_pool:
+      name: default
+      work_queue_name: default
+    schedule:
+      cron: "0 2 * * *"  # 2:00 AM UTC every day
+    tags:
+      - weather
+      - github
+      - scheduled

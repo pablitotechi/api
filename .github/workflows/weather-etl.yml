@@ -1,0 +1,45 @@
+name: Weather ETL Pipeline
+
+on:
+  schedule:
+    # Ejecuta todos los días a las 2:00 AM UTC
+    - cron: "0 2 * * *"
+  
+  # Permite ejecución manual desde GitHub
+  workflow_dispatch:
+
+jobs:
+  weather-etl:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Weather ETL Pipeline
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          COLLECTION_NAME: ${{ secrets.COLLECTION_NAME }}
+          DEFAULT_CITY: ${{ secrets.DEFAULT_CITY }}
+          DEFAULT_COUNTRY_CODE: ${{ secrets.DEFAULT_COUNTRY_CODE }}
+          DEFAULT_TIMEZONE: ${{ secrets.DEFAULT_TIMEZONE }}
+        run: |
+          python weather_pipeline.py
+      
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: pipeline-logs
+          path: logs/
