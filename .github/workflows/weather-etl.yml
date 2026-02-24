@@ -27,22 +27,18 @@ jobs:
           pip install -r requirements.txt
       
       - name: Create .env file
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          COLLECTION_NAME: ${{ secrets.COLLECTION_NAME }}
-          DEFAULT_CITY: ${{ secrets.DEFAULT_CITY }}
-          DEFAULT_COUNTRY_CODE: ${{ secrets.DEFAULT_COUNTRY_CODE }}
-          DEFAULT_TIMEZONE: ${{ secrets.DEFAULT_TIMEZONE }}
         run: |
-          cat > .env << EOF
-          MONGO_URI=$MONGO_URI
-          DB_NAME=$DB_NAME
-          COLLECTION_NAME=$COLLECTION_NAME
-          DEFAULT_CITY=$DEFAULT_CITY
-          DEFAULT_COUNTRY_CODE=$DEFAULT_COUNTRY_CODE
-          DEFAULT_TIMEZONE=$DEFAULT_TIMEZONE
+          cat > .env << 'EOF'
+          MONGO_URI=${{ secrets.MONGO_URI }}
+          DB_NAME=${{ secrets.DB_NAME }}
+          COLLECTION_NAME=${{ secrets.COLLECTION_NAME }}
+          DEFAULT_CITY=${{ secrets.DEFAULT_CITY }}
+          DEFAULT_COUNTRY_CODE=${{ secrets.DEFAULT_COUNTRY_CODE }}
+          DEFAULT_TIMEZONE=${{ secrets.DEFAULT_TIMEZONE }}
           EOF
+          echo "✅ .env file created"
+          echo "📋 Checking .env contents (first 50 chars of each line):"
+          head -c 100 .env
       
       - name: Run Weather ETL Pipeline
         run: |
