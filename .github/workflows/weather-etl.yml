@@ -26,7 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
-      - name: Run Weather ETL Pipeline
+      - name: Create .env file
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           DB_NAME: ${{ secrets.DB_NAME }}
@@ -34,6 +34,17 @@ jobs:
           DEFAULT_CITY: ${{ secrets.DEFAULT_CITY }}
           DEFAULT_COUNTRY_CODE: ${{ secrets.DEFAULT_COUNTRY_CODE }}
           DEFAULT_TIMEZONE: ${{ secrets.DEFAULT_TIMEZONE }}
+        run: |
+          cat > .env << EOF
+          MONGO_URI=$MONGO_URI
+          DB_NAME=$DB_NAME
+          COLLECTION_NAME=$COLLECTION_NAME
+          DEFAULT_CITY=$DEFAULT_CITY
+          DEFAULT_COUNTRY_CODE=$DEFAULT_COUNTRY_CODE
+          DEFAULT_TIMEZONE=$DEFAULT_TIMEZONE
+          EOF
+      
+      - name: Run Weather ETL Pipeline
         run: |
           python weather_pipeline.py
       
